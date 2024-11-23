@@ -4,6 +4,19 @@ const fs = require('fs');
 const crypto = require('crypto');
 const Datauri = require('datauri/sync');
 
+// import build-in highlight plugin
+let buildInHonkitPluginHighlight = null;
+try {
+  buildInHonkitPluginHighlight = require('@honkit/honkit-plugin-highlight');
+} catch {
+  try {
+    // Lookup for honkit's pre-fork plugins. (built-in until gitbook@3.2.2)
+    buildInHonkitPluginHighlight = require('gitbook-plugin-highlight');
+  } catch {
+    console.warn('[mermaid-newface] Honkit built-in highlight plugin not found.');
+  }
+}
+
 // prefix for temporary file
 const PREFIX = '.mermaid';
 
@@ -67,7 +80,7 @@ module.exports = {
     code: (block) => { 
       const lang = block.kwargs.language;
       if (lang != 'mermaid') { 
-        return block;
+        return buildInHonkitPluginHighlight?.blocks?.code?.(block) ?? block;
       }
       try {
         block.body = processBlock(block);
