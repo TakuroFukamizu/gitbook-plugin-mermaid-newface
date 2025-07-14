@@ -8,7 +8,7 @@
     "gitbook": ">=3.0.0"
   },
   "dependencies": {
-    "@mermaid-js/mermaid-cli": "^9.1.2",
+    "@mermaid-js/mermaid-cli": "^11.6.0",
     "crypto": "^1.0.1",
     "datauri": "^3.0.0"
   },
