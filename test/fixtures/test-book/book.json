@@ -1,0 +1,8 @@
+{
+  "plugins": ["mermaid-newface"],
+  "pluginsConfig": {
+    "mermaid-newface": {
+      "theme": "default"
+    }
+  }
+}
