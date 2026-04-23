@@ -1,3 +1,6 @@
 node_modules/
 bower_components/
 dist
+test/fixtures/test-book/_book/
+test/fixtures/test-book/node_modules/
+test/fixtures/test-book/output.pdf
