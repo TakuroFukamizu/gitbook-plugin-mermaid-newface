@@ -1,0 +1,29 @@
+name: E2E Test
+
+on:
+  push:
+    branches: [master, feature/**]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Calibre (for PDF tests)
+        run: sudo apt-get update && sudo apt-get install -y calibre
+
+      - name: Run E2E tests
+        run: npm test
