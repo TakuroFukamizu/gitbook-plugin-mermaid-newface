@@ -12,6 +12,15 @@ const SYMLINK_PATH = path.join(PLUGIN_ROOT, 'node_modules', 'gitbook-plugin-merm
 
 const execOpts = { cwd: BOOK_DIR, stdio: 'pipe', timeout: 120000 };
 
+function hasCalibre() {
+  try {
+    execSync('which ebook-convert', { stdio: 'pipe' });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 beforeAll(() => {
   // Create self-referential symlink:
   // <project>/node_modules/gitbook-plugin-mermaid-newface -> <project>
@@ -68,5 +77,31 @@ describe('Website (HTML/SVG) output', () => {
       return $(el).text().includes('console.log');
     });
     expect(hasJsBlock).toBe(true);
+  });
+});
+
+const describePdf = hasCalibre() ? describe : describe.skip;
+
+describePdf('PDF (PNG data URI) output', () => {
+  const pdfPath = path.join(BOOK_DIR, 'output.pdf');
+
+  beforeAll(() => {
+    execSync('npx honkit pdf . output.pdf', execOpts);
+  });
+
+  afterAll(() => {
+    if (fs.existsSync(pdfPath)) {
+      fs.rmSync(pdfPath);
+    }
+  });
+
+  test('honkit pdf completes successfully', () => {
+    expect(fs.existsSync(pdfPath)).toBe(true);
+  });
+
+  test('output PDF has non-trivial file size', () => {
+    const stats = fs.statSync(pdfPath);
+    // A PDF with embedded PNG diagrams should be at least a few KB
+    expect(stats.size).toBeGreaterThan(1024);
   });
 });
