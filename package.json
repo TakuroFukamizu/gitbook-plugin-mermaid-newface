@@ -38,5 +38,8 @@
   "homepage": "https://github.com/TakuroFukamizu/gitbook-plugin-mermaid-newface",
   "bugs": {
     "url": "https://github.com/TakuroFukamizu/gitbook-plugin-mermaid-newface/issues"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["puppeteer"]
   }
 }
