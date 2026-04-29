@@ -15,15 +15,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Install Calibre (for PDF tests)
         run: sudo apt-get update && sudo apt-get install -y calibre
 
       - name: Run E2E tests
-        run: npm test
+        run: pnpm test
