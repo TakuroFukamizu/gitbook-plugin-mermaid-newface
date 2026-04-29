@@ -11,28 +11,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v1
-      - name: setup Node
-        uses: actions/setup-node@v1
+        uses: actions/checkout@v4
+      - name: setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          node-version: 16.x
+          version: 10
+      - name: setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
           registry-url: 'https://registry.npmjs.org'
-      - name: install can-npm-publish and dependencies
-        run: |
-          yarn install --production=false
-          yarn add can-npm-publish
-      # - name: build
-      #   run: |
-      #       yarn build
+          cache: 'pnpm'
+      - name: install dependencies
+        run: pnpm install --frozen-lockfile
       - name: check version and add tag
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           REPO: ${{github.repository}}
           COMMIT: ${{github.sha}}
         run: ./ci/release.sh
-      - name: remove can-npm-publish
-        run: yarn remove can-npm-publish
       - name: release
-        run: yarn publish
+        run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
